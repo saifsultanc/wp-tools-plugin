@@ -40,4 +40,17 @@ function members_only() {
   }
 }
 
+add_action( 'gform_after_create_post', 'set_post_content', 10, 3 );
+function set_post_content( $post_id, $entry, $form ) {
+ 
+    //get post
+    $post = get_post( $post_id );
+ 
+    //change post content
+    $post->post_content = $post->post_content . "\nPost created using Gravity Forms";
+ 
+    //update post
+    wp_update_post( $post );
+}
+
 ?>
