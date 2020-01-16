@@ -47,10 +47,29 @@ function set_post_content( $post_id, $entry, $form ) {
     $post = get_post( $post_id );
  
     //change post content
-    $post->post_content = $post->post_content . "\nPost created using Gravity Forms";
+    $post->post_content = $post->post_content . "\n\nPost created using Gravity Forms";
  
     //update post
     wp_update_post( $post );
 }
 
+add_action( 'gform_after_create_post', 'gform_post_log', 10, 3 );
+function gform_post_log( $post_id, $entry, $form ) {
+
+  $post_log = plugin_dir_path( __FILE__ ) . 'gf_post_log.txt';
+
+  $message = get_the_title( $post_id ) . ' was just saved';
+
+  if ( file_exists( $post_log ) ) {
+
+    $file = fopen( $post_log, 'a' );
+    fwrite($file, $message."\n");
+  }
+  else {
+    
+    $file = fopen( $post_log, 'w' );
+    fwrite( $file, "LIST OF POSTS CREATED WITH GRAVITY FORMS:\n");
+    fwrite( $file, $message."\n");
+  }
+}
 ?>
